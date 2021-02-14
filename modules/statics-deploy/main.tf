@@ -202,15 +202,12 @@ module "deploy_trigger" {
 # Upload static files to s3
 ###########################
 
-resource "null_resource" "static_s3_upload" {
-  triggers = {
-    static_files_archive = filemd5(var.static_files_archive)
-  }
+resource "aws_s3_bucket_object" "object" {
+  bucket = aws_s3_bucket.static_upload.id
+  key    = basename(var.static_files_archive)
+  source = abspath(var.static_files_archive)
 
-  provisioner "local-exec" {
-    command     = "./s3-put -r ${aws_s3_bucket.static_upload.region} -T ${abspath(var.static_files_archive)} /${aws_s3_bucket.static_upload.id}/${basename(var.static_files_archive)}"
-    working_dir = "${path.module}/s3-bash4/bin"
-  }
+  etag = filemd5(var.static_files_archive)
 
   # Make sure this only runs when the bucket and the lambda trigger are setup
   depends_on = [
