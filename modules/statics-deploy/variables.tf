@@ -1,3 +1,9 @@
+variable "deployment_name" {
+  description = "Identifier for the deployment group (valid DNS names are allowed)."
+  type        = string
+  default     = "tf-next"
+}
+
 variable "static_files_archive" {
   type = string
 }

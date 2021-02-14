@@ -30,7 +30,7 @@ module "proxy_config" {
 #############
 
 resource "random_id" "function_name" {
-  prefix      = "next-tf-proxy-"
+  prefix      = "${var.deployment_name}-proxy-"
   byte_length = 4
 }
 

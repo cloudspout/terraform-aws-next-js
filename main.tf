@@ -28,7 +28,7 @@ locals {
 resource "random_id" "function_name" {
   for_each = local.lambdas
 
-  prefix      = "${each.key}-"
+  prefix      = "${var.deployment_name}-${each.key}-"
   byte_length = 4
 }
 
@@ -40,6 +40,7 @@ resource "random_id" "function_name" {
 module "statics_deploy" {
   source = "./modules/statics-deploy"
 
+  deployment_name                  = var.deployment_name
   static_files_archive             = local.static_files_archive
   expire_static_assets             = var.expire_static_assets
   debug_use_local_packages         = var.debug_use_local_packages

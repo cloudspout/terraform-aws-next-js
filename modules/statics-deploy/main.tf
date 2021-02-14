@@ -11,7 +11,7 @@ locals {
 ########################
 
 resource "aws_s3_bucket" "static_upload" {
-  bucket_prefix = "next-tf-deploy-source"
+  bucket_prefix = "${var.deployment_name}-deploy-source"
   acl           = "private"
   force_destroy = true
   tags          = var.tags
@@ -50,7 +50,7 @@ resource "aws_s3_bucket_notification" "on_create" {
 #########################
 
 resource "aws_s3_bucket" "static_deploy" {
-  bucket_prefix = "next-tf-static-deploy"
+  bucket_prefix = "${var.deployment_name}-static-deploy"
   acl           = "private"
   force_destroy = true
   tags          = var.tags
@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "access_static_deploy" {
 }
 
 resource "aws_iam_policy" "access_static_deploy" {
-  name_prefix = "next-tf"
+  name_prefix = var.deployment_name
   description = "S3 access for ${aws_s3_bucket.static_deploy.id} bucket"
 
   policy = data.aws_iam_policy_document.access_static_deploy.json
@@ -153,7 +153,7 @@ module "lambda_content" {
 }
 
 resource "random_id" "function_name" {
-  prefix      = "next-tf-deploy-"
+  prefix      = "${var.deployment_name}-deploy-"
   byte_length = 4
 }
 
